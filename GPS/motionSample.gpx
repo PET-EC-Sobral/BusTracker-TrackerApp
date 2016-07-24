@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="MapSource 6.16.1" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-
+
+instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+<trk>
+<name>emulate</name>
+<trkseg>
+<trkpt lat="-3.6930414" lon="-40.3571498"><ele>0.000000</ele><time>2014-03-05T20:00:01Z</time></trkpt>
+<trkpt lat="-3.6927202" lon="-40.3582871"><ele>0.000000</ele><time>2014-03-05T20:00:02Z</time></trkpt>
+<trkpt lat="-3.6921207" lon="-40.3582549"><ele>0.000000</ele><time>2014-03-05T20:00:03Z</time></trkpt>
+<trkpt lat="-3.6918744" lon="-40.3570640"><ele>0.000000</ele><time>2014-03-05T20:00:04Z</time></trkpt>
+<trkpt lat="-3.6916067" lon="-40.3545320"><ele>0.000000</ele><time>2014-03-05T20:00:05Z</time></trkpt>
+<trkpt lat="-3.6913070" lon="-40.3521824"><ele>0.000000</ele><time>2014-03-05T20:00:06Z</time></trkpt>
+<trkpt lat="-3.6911785" lon="-40.3513241"><ele>0.000000</ele><time>2014-03-05T20:00:07Z</time></trkpt>
+<trkpt lat="-3.6901078" lon="-40.3515816"><ele>0.000000</ele><time>2014-03-05T20:00:08Z</time></trkpt>
+<trkpt lat="-3.6902363" lon="-40.3525901"><ele>0.000000</ele><time>2014-03-05T20:00:09Z</time></trkpt>
+<trkpt lat="-3.6920136" lon="-40.3523540"><ele>0.000000</ele><time>2014-03-05T20:00:10Z</time></trkpt>
+<trkpt lat="-3.6921849" lon="-40.3540921"><ele>0.000000</ele><time>2014-03-05T20:00:11Z</time></trkpt>
+<trkpt lat="-3.6924740" lon="-40.3560448"><ele>0.000000</ele><time>2014-03-05T20:00:12Z</time></trkpt>
+</trkseg>
+</trk>
+</gpx>
