@@ -6,16 +6,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Debug;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
 import android.util.Log;
 
 import br.ufc.ec.pet.bustracker.trackerapp.types.Bus;
+import br.ufc.ec.pet.bustracker.trackerapp.types.Message;
 import br.ufc.ec.pet.bustracker.trackerapp.types.Route;
 
 public class TrackerService extends Service {
@@ -53,6 +48,8 @@ public class TrackerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         setSendLocation(false);
+        mInstance = null;
+        LogFile.writeln(getApplicationContext(), "Serviço finalizado...");
     }
 
     @Override
@@ -76,16 +73,25 @@ public class TrackerService extends Service {
                 Log.d("Bus", intent.getStringExtra("TOKEN"));
                 Log.d("Bus", mConnectionManager.getToken());
             }
+            if(intent.hasExtra("MESSAGE")){
+                Message message = intent.getParcelableExtra("MESSAGE");
+                sendMessage(message);
+            }
         }
-
+        LogFile.writeln(getApplicationContext(), "Serviço iniciado...");
         return super.onStartCommand(intent, flags, startId);
     }
-
-    public void setSendLocation(boolean value){
+    private void sendMessage(Message message){
+        mConnectionManager.postMessage(mBus, mRoute, message);
+    }
+    private void setSendLocation(boolean value){
         if(value)
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
         else
             mLocationManager.removeUpdates(mLocationListener);
+    }
+    public static boolean isRunning(){
+        return mInstance != null;
     }
     private void createRoute(){
 

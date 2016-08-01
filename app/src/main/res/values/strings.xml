@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BusTracker TrackerApp</string>
     <string name="host_default">"http://santana.azurewebsites.net/BusTrackerSecureAPI/index.php"</string>
+    <string name="log_file">log</string>
 </resources>

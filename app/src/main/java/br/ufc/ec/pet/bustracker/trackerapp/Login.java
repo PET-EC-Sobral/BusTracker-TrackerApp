@@ -39,6 +39,12 @@ public class Login extends AppCompatActivity implements UserConnectionManagerLis
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mPasswordEt.setText("");
+    }
+
+    @Override
     public void onLogin(UserConnectionManager connection) {
         if(connection.hasToken()){
             Log.d("Bus", "inside");

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.ufc.ec.pet.bustracker.trackerapp.types.Bus;
+import br.ufc.ec.pet.bustracker.trackerapp.types.Message;
 import br.ufc.ec.pet.bustracker.trackerapp.types.Route;
 
 
@@ -36,6 +37,40 @@ public class ConnectionManager{
         //setToken("JpURojQBMP7fD5gYC6t26jb9A40FPae2JNjRBzJpo4NoBgpkRKOW6U8b8naLPa+dEvR0Z0+tHcHEnp8Wxjj4MGfVYarqY73d2j9cF5cCAuEpus2Oj9bmuCVQjbxF7wPIViWRi99yO0YZOGF4EEpaZGRiTJCMaAV+CcyHa15soT5AY+qOJgHEsqK2irem9TYuPZP0DKipQK0sWYNoDGyszYPo0x71W8H7uVT69GFzgJQ=");
 
     }
+    public void postMessage(Bus bus, Route route, Message message){
+        JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("title", message.getTitle());
+            requestBody.put("message", message.getMessage());
+        }catch (JSONException e){Log.d("Bus", e.getMessage());}
+        Log.d("Bus", "BodyRequest: "+requestBody.toString());
+        Map requestHeader = new HashMap();
+        requestHeader.put("Token", getToken());
+
+        String url = serverPrefix + "/routes/"+route.getId()+"/buses/"+bus.getId()+"/messages";
+        AuthenticatedJsonObjectRequest jreq = new AuthenticatedJsonObjectRequest(JsonObjectRequest.Method.POST, url, requestBody, requestHeader,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("Bus", "response from send message: "+response.toString());
+                            LogFile.writeln(context, "Mensagem enviada com sucesso.");
+                        } catch (Exception e){
+                            Log.e("Bus", e.getMessage());
+                            LogFile.writeln(context, "Erro no envio de message:"+e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Bus", "Error"+error.getMessage());
+                        LogFile.writeln(context, "Erro no envio de mensagem:"+error.getMessage());
+                        //Log.d("Bus", "StatusCode"+error.networkResponse.statusCode);
+                    }
+                });
+        requestQueue.add(jreq);
+    }
     public void postLocation(Bus bus, Route route){
         JSONObject requestBody = new JSONObject();
         try {
@@ -46,6 +81,8 @@ public class ConnectionManager{
         Map requestHeader = new HashMap();
         requestHeader.put("Token", getToken());
 
+        LogFile.writeln(context, "Enviando localização=>lat:"+bus.getLatitude()+"lon:"+bus.getLongitude());
+
         String url = serverPrefix + "/routes/"+route.getId()+"/buses/"+bus.getId()+"/positions";
         AuthenticatedJsonObjectRequest jreq = new AuthenticatedJsonObjectRequest(JsonObjectRequest.Method.POST, url, requestBody, requestHeader,
                 new Response.Listener<JSONObject>() {
@@ -53,8 +90,10 @@ public class ConnectionManager{
                     public void onResponse(JSONObject response) {
                         try {
                             Log.d("Bus", "response from send location: "+response.toString());
+                            LogFile.writeln(context, "Localização enviada com sucesso.");
                         } catch (Exception e){
                             Log.e("Bus", e.getMessage());
+                            LogFile.writeln(context, "Erro no envio de localização:"+e.getMessage());
                         }
                     }
                 },
@@ -62,6 +101,7 @@ public class ConnectionManager{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Bus", "Error"+error.getMessage());
+                        LogFile.writeln(context, "Erro no envio de localização:"+error.getMessage());
                         //Log.d("Bus", "StatusCode"+error.networkResponse.statusCode);
                     }
                 });

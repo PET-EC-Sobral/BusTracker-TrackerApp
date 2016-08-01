@@ -1,13 +1,25 @@
 package br.ufc.ec.pet.bustracker.trackerapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import br.ufc.ec.pet.bustracker.trackerapp.types.Bus;
 import br.ufc.ec.pet.bustracker.trackerapp.types.Route;
@@ -19,6 +31,10 @@ public class ConnectActivity extends AppCompatActivity {
     private Bus mBus;
     private Route mRoute;
     private ConnectionManager mConnectionManager;
+    private Handler mUpdateLogHandler;
+    private TextView mLogTv;
+    private FloatingActionButton mSendMessageFab;
+    private FloatingActionsMenu mActionFam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +69,20 @@ public class ConnectActivity extends AppCompatActivity {
         mTimeIntervalEt.setText("1000");
         mDescriptionRouteEt.setText("Dese");
 
+        LogFile.writeln(this, "Sessão iniciada: "+(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())));
+        mLogTv = (TextView) findViewById(R.id.log);
+        mUpdateLogHandler = new Handler();
+        final Context context = getApplicationContext();
+        mUpdateLogHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mLogTv.setText(LogFile.read(context));
+                mUpdateLogHandler.postDelayed(this, 1000);
+            }
+        });
+
+        mSendMessageFab = (FloatingActionButton) findViewById(R.id.send_message_fab);
+        mActionFam = (FloatingActionsMenu) findViewById(R.id.actions_fam);
 
         setEvents();
     }
@@ -73,12 +103,50 @@ public class ConnectActivity extends AppCompatActivity {
                     intent.putExtra("TIME_INTERVAL", getTimeInterval());
                     intent.putExtra("TOKEN", mConnectionManager.getToken());
                     startService(intent);
+                    mActionFam.setVisibility(View.VISIBLE);
                 }
-                else
+                else {
+                    mActionFam.setVisibility(View.INVISIBLE);
                     stopService(new Intent(v.getContext(), TrackerService.class));
+                }
+            }
+        });
+
+        mSendMessageFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(v.getContext(), SendMessageActivity.class);
+                startActivity(it);
+                mActionFam.collapse();
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mActionFam.isExpanded())
+            mActionFam.collapse();
+        else
+            super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        if(TrackerService.isRunning()) {
+            mStartBtn.setChecked(true);
+            mActionFam.setVisibility(View.VISIBLE);
+            LogFile.writeln(this, "O serviço está ligado.", true);
+        }
+        else {
+            mStartBtn.setChecked(false);
+            mActionFam.setVisibility(View.INVISIBLE);
+            LogFile.writeln(this, "O serviço está desligado.", true);
+        }
+    }
+
     private Bus getBus(){
         mBus.setId(Integer.parseInt(mIdBusEt.getText().toString()));
         return mBus;
@@ -98,9 +166,9 @@ public class ConnectActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(this, TrackerService.class);
-        intent.putExtra("STOP_SEND", true);
+        //Intent intent = new Intent(this, TrackerService.class);
+        //intent.putExtra("STOP_SEND", true);
         //startService(intent);
-        stopService(intent);
+        //stopService(intent);
     }
 }
