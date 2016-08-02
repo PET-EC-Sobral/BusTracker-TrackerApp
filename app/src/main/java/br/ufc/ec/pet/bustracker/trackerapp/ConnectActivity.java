@@ -2,6 +2,7 @@ package br.ufc.ec.pet.bustracker.trackerapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,12 +63,12 @@ public class ConnectActivity extends AppCompatActivity {
 
         mBus = new Bus();
         mRoute = new Route();
-        mHostEt.setText(getResources().getString(R.string.host_default));
+/*        mHostEt.setText(getResources().getString(R.string.host_default));
         mNameRouteEt.setText("UFC -");
         mIdRouteEt.setText("86");
         mIdBusEt.setText("1");
         mTimeIntervalEt.setText("1000");
-        mDescriptionRouteEt.setText("Dese");
+        mDescriptionRouteEt.setText("Dese");*/
 
         LogFile.writeln(this, "Sessão iniciada: "+(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())));
         mLogTv = (TextView) findViewById(R.id.log);
@@ -85,6 +86,26 @@ public class ConnectActivity extends AppCompatActivity {
         mActionFam = (FloatingActionsMenu) findViewById(R.id.actions_fam);
 
         setEvents();
+    }
+    private void saveInputs(){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("BUS_ID", mIdBusEt.getText().toString());
+        editor.putString("ROUTE_ID", mIdRouteEt.getText().toString());
+        editor.putString("HOST", mHostEt.getText().toString());
+        editor.putString("ROUTE_NAME", mNameRouteEt.getText().toString());
+        editor.putString("ROUTE_DESCRIPTION", mDescriptionRouteEt.getText().toString());
+        editor.putString("TIME_INTERVAL", mTimeIntervalEt.getText().toString());
+        editor.commit();
+    }
+    private void rememberInputs(){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mIdBusEt.setText(sharedPref.getString("BUS_ID", ""));
+        mIdRouteEt.setText(sharedPref.getString("ROUTE_ID", ""));
+        mHostEt.setText(sharedPref.getString("HOST", ""));
+        mNameRouteEt.setText(sharedPref.getString("ROUTE_NAME", ""));
+        mDescriptionRouteEt.setText(sharedPref.getString("ROUTE_DESCRIPTION", ""));
+        mTimeIntervalEt.setText(sharedPref.getString("TIME_INTERVAL", "1000"));
     }
     private void setEvents(){
         mStartBtn.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +155,7 @@ public class ConnectActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        rememberInputs();
 
         if(TrackerService.isRunning()) {
             mStartBtn.setChecked(true);
@@ -145,6 +167,12 @@ public class ConnectActivity extends AppCompatActivity {
             mActionFam.setVisibility(View.INVISIBLE);
             LogFile.writeln(this, "O serviço está desligado.", true);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveInputs();
     }
 
     private Bus getBus(){
