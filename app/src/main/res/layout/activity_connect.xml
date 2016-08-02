@@ -12,107 +12,106 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/scrollView" >
 
-    </ScrollView>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true">
-
-        <EditText
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/host_et"
-            android:layout_gravity="center_horizontal"
-            android:hint="Servidor" />
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rota"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/id_route_et"
-            android:layout_gravity="center_horizontal"
-            android:hint="ID" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/name_route_et"
-            android:hint="Nome" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/description_route_et"
-            android:layout_gravity="center_horizontal"
-            android:hint="Descriçao" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Onibus"
-            android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/id_bus_et"
-            android:layout_gravity="center_horizontal"
-            android:hint="ID" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Configurações"
-            android:id="@+id/textView3"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/time_interval_et"
-            android:layout_gravity="center_horizontal"
-            android:hint="Intervalo de envio" />
-
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/start_btn"
-            android:layout_gravity="center_horizontal"
-            android:checked="false" />
-
-        <!--<ScrollView
-            android:id="@+id/ScrollView01"
-            android:layout_width="wrap_content"
-            android:layout_height="150dip">-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/host_et"
+                android:layout_gravity="center_horizontal"
+                android:hint="Servidor" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/log"
-                android:text="Log"/>
+                android:text="Rota"
+                android:id="@+id/textView"
+                android:layout_gravity="center_horizontal" />
 
-        <!--</ScrollView>-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/id_route_et"
+                android:layout_gravity="center_horizontal"
+                android:hint="ID" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_route_et"
+                android:hint="Nome" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/description_route_et"
+                android:layout_gravity="center_horizontal"
+                android:hint="Descriçao" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Onibus"
+                android:id="@+id/textView2"
+                android:layout_gravity="center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_bus_et"
+                android:layout_gravity="center_horizontal"
+                android:hint="ID" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configurações"
+                android:id="@+id/textView3"
+                android:layout_gravity="center_horizontal" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_interval_et"
+                android:layout_gravity="center_horizontal"
+                android:hint="Intervalo de envio" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/start_btn"
+                android:layout_gravity="center_horizontal"
+                android:checked="false" />
+
+            <!--<ScrollView
+                android:id="@+id/ScrollView01"
+                android:layout_width="wrap_content"
+                android:layout_height="150dip">-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/log"
+                    android:text="Log"/>
+
+            <!--</ScrollView>-->
 
 
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/actions_fam"
