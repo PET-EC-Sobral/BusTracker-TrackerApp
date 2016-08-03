@@ -49,10 +49,15 @@ public class ConnectActivity extends AppCompatActivity {
                 mConnectionManager.setToken(it.getStringExtra("TOKEN"));
                 Log.d("Bus", mConnectionManager.getToken());
             }
+            if(it.hasExtra("HOST")){
+                mConnectionManager.setServerPrefix(it.getStringExtra("HOST"));
+            }
         }
 
 
         mHostEt = (EditText) findViewById(R.id.host_et);
+        mHostEt.setEnabled(false);
+        mHostEt.setText(mConnectionManager.getServerPrefix());
         mIdRouteEt = (EditText) findViewById(R.id.id_route_et);
         mNameRouteEt = (EditText) findViewById(R.id.name_route_et);
         mDescriptionRouteEt = (EditText) findViewById(R.id.description_route_et);
@@ -92,7 +97,6 @@ public class ConnectActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("BUS_ID", mIdBusEt.getText().toString());
         editor.putString("ROUTE_ID", mIdRouteEt.getText().toString());
-        editor.putString("HOST", mHostEt.getText().toString());
         editor.putString("ROUTE_NAME", mNameRouteEt.getText().toString());
         editor.putString("ROUTE_DESCRIPTION", mDescriptionRouteEt.getText().toString());
         editor.putString("TIME_INTERVAL", mTimeIntervalEt.getText().toString());
@@ -102,7 +106,7 @@ public class ConnectActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         mIdBusEt.setText(sharedPref.getString("BUS_ID", ""));
         mIdRouteEt.setText(sharedPref.getString("ROUTE_ID", ""));
-        mHostEt.setText(sharedPref.getString("HOST", ""));
+        mHostEt.setText(mConnectionManager.getServerPrefix());
         mNameRouteEt.setText(sharedPref.getString("ROUTE_NAME", ""));
         mDescriptionRouteEt.setText(sharedPref.getString("ROUTE_DESCRIPTION", ""));
         mTimeIntervalEt.setText(sharedPref.getString("TIME_INTERVAL", "1000"));
