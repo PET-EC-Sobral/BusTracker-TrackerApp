@@ -85,8 +85,10 @@ public class TrackerService extends Service {
         mConnectionManager.postMessage(mBus, mRoute, message);
     }
     private void setSendLocation(boolean value){
-        if(value)
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
+        if(value) {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mTimeInterval, 10, mLocationListener);
+        }
         else
             mLocationManager.removeUpdates(mLocationListener);
     }
@@ -112,6 +114,7 @@ public class TrackerService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             Log.d("Bus", "Location is changed");
+            Log.d("Bus", "Accuracy: "+ location.getAccuracy());
             mLocation = location;
             Log.d("BusTracker", "lan:"+mLocation.getLatitude()+" lon:"+mLocation.getLongitude());
             mBus.setLatitude(mLocation.getLatitude());
