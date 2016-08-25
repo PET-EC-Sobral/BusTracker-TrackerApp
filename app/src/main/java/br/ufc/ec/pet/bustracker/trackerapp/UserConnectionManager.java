@@ -19,6 +19,8 @@ import java.util.Map;
 public class UserConnectionManager extends ConnectionManager {
     private boolean hasToken;
     private UserConnectionManagerListener listener;
+    public final static int SUCCESS = 1;
+    public final static int ERROR = 2;
 
     public UserConnectionManager(Context context, String serverPrefix) {
         super(context, serverPrefix);
@@ -43,7 +45,7 @@ public class UserConnectionManager extends ConnectionManager {
                     public void onResponse(JSONObject response) {
                         try {
                             setToken(response.getString("token"));
-                            notifyLogin();
+                            notifyLogin(SUCCESS);
                         } catch (Exception e){
                             Log.e("Bus", e.getMessage());
                         }
@@ -52,6 +54,7 @@ public class UserConnectionManager extends ConnectionManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        notifyLogin(ERROR);
                         Log.d("Bus", "Error"+error.getMessage());
                         //Log.d("Bus", "StatusCode"+error.networkResponse.statusCode);
                     }
@@ -72,9 +75,9 @@ public class UserConnectionManager extends ConnectionManager {
     public void setUserConnectionManagerListener(UserConnectionManagerListener listener) {
         this.listener = listener;
     }
-    public void notifyLogin(){
+    public void notifyLogin(int status){
         if(listener != null)
-            listener.onLogin(this);
+            listener.onLogin(this, status);
     }
 
     public class User{

@@ -115,6 +115,7 @@ public class TrackerService extends Service {
         public void onLocationChanged(Location location) {
             Log.d("Bus", "Location is changed");
             Log.d("Bus", "Accuracy: "+ location.getAccuracy());
+            Log.d("Bus", "provider: "+ location.getProvider());
             mLocation = location;
             Log.d("BusTracker", "lan:"+mLocation.getLatitude()+" lon:"+mLocation.getLongitude());
             mBus.setLatitude(mLocation.getLatitude());
