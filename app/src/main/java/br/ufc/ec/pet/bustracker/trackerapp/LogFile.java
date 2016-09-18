@@ -49,8 +49,8 @@ public class LogFile {
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                    stringBuilder.append("\n");
+                    stringBuilder.insert(0, receiveString);
+                    stringBuilder.insert(receiveString.length(),  "\n");
                 }
 
                 inputStream.close();
