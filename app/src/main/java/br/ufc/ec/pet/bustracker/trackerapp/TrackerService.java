@@ -86,8 +86,11 @@ public class TrackerService extends Service {
     }
     private void setSendLocation(boolean value){
         if(value) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mTimeInterval, 10, mLocationListener);
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
+
+            if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mTimeInterval, 10, mLocationListener);
         }
         else
             mLocationManager.removeUpdates(mLocationListener);
