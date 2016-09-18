@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,7 +81,8 @@ public class ConnectActivity extends AppCompatActivity {
 
         LogFile.writeln(this, "Sessão iniciada: "+(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())));
         mLogTv = (TextView) findViewById(R.id.log);
-        mUpdateLogHandler = new Handler();
+        mLogTv.setText("");
+        /*mUpdateLogHandler = new Handler();
         final Context context = getApplicationContext();
         mUpdateLogHandler.post(new Runnable() {
             @Override
@@ -86,7 +90,7 @@ public class ConnectActivity extends AppCompatActivity {
                 mLogTv.setText(LogFile.read(context));
                 mUpdateLogHandler.postDelayed(this, 1000);
             }
-        });
+        });*/
 
         mSendMessageFab = (FloatingActionButton) findViewById(R.id.send_message_fab);
         mActionFam = (FloatingActionsMenu) findViewById(R.id.actions_fam);
@@ -178,6 +182,29 @@ public class ConnectActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveInputs();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.connect_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_show_log:
+                Intent it = new Intent(this, LogcatView.class);
+                startActivity(it);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private Bus getBus(){

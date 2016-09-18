@@ -12,8 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConnectActivity">
-        </activity>
+        <activity android:name=".ConnectActivity"></activity>
 
         <service
             android:name=".TrackerService"
@@ -33,7 +32,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SendMessageActivity"></activity>
+        <activity android:name=".SendMessageActivity" />
+        <activity android:name=".LogcatView"></activity>
     </application>
 
 </manifest>
