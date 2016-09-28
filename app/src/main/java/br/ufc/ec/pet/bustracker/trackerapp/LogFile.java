@@ -65,4 +65,17 @@ public class LogFile {
 
         return ret;
     }
+
+    public static void clear(Context context){
+        OutputStreamWriter outputStreamWriter = null;
+        try {
+            outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
+            outputStreamWriter.write("");
+        }catch (IOException e){Log.d("LogFile Error: ", e.toString());}
+        finally{
+            try {
+                outputStreamWriter.close();
+            }catch (IOException e){Log.d("LogFile", "Error on close log file");}
+        }
+    }
 }
