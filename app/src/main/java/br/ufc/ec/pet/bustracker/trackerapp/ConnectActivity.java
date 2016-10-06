@@ -72,25 +72,11 @@ public class ConnectActivity extends AppCompatActivity {
 
         mBus = new Bus();
         mRoute = new Route();
-/*        mHostEt.setText(getResources().getString(R.string.host_default));
-        mNameRouteEt.setText("UFC -");
-        mIdRouteEt.setText("86");
-        mIdBusEt.setText("1");
-        mTimeIntervalEt.setText("1000");
-        mDescriptionRouteEt.setText("Dese");*/
 
         LogFile.writeln(this, "Sessão iniciada: "+(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())));
         mLogTv = (TextView) findViewById(R.id.log);
         mLogTv.setText("");
-        /*mUpdateLogHandler = new Handler();
-        final Context context = getApplicationContext();
-        mUpdateLogHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mLogTv.setText(LogFile.read(context));
-                mUpdateLogHandler.postDelayed(this, 1000);
-            }
-        });*/
+
 
         mSendMessageFab = (FloatingActionButton) findViewById(R.id.send_message_fab);
         mActionFam = (FloatingActionsMenu) findViewById(R.id.actions_fam);
@@ -226,9 +212,5 @@ public class ConnectActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Intent intent = new Intent(this, TrackerService.class);
-        //intent.putExtra("STOP_SEND", true);
-        //startService(intent);
-        //stopService(intent);
     }
 }
