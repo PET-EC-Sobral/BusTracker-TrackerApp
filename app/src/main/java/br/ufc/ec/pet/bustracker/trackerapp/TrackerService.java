@@ -18,6 +18,7 @@ public class TrackerService extends Service {
     Bus mBus;
     String mHost;
     long mTimeInterval = 1*1000;
+    float mDistanceMin = 10;
     private static TrackerService mInstance;
     private boolean sendRequest;
     LocationManager mLocationManager;
@@ -68,6 +69,8 @@ public class TrackerService extends Service {
 
             mTimeInterval = intent.getLongExtra("TIME_INTERVAL", mTimeInterval);
 
+            mDistanceMin = intent.getFloatExtra("DISTANCE_MIN", mDistanceMin);
+
             if(intent.hasExtra("TOKEN")) {
                 mConnectionManager.setToken(intent.getStringExtra("TOKEN"));
                 Log.d("Bus", intent.getStringExtra("TOKEN"));
@@ -87,10 +90,10 @@ public class TrackerService extends Service {
     private void setSendLocation(boolean value){
         if(value) {
             if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, 10, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mTimeInterval, mDistanceMin, mLocationListener);
 
             if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mTimeInterval, 10, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mTimeInterval, mDistanceMin, mLocationListener);
         }
         else
             mLocationManager.removeUpdates(mLocationListener);

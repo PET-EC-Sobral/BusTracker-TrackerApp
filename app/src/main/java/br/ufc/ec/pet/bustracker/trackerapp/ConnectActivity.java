@@ -31,13 +31,12 @@ import br.ufc.ec.pet.bustracker.trackerapp.types.Route;
 
 public class ConnectActivity extends AppCompatActivity {
     private EditText mHostEt, mIdRouteEt, mNameRouteEt, mDescriptionRouteEt,
-            mIdBusEt, mTimeIntervalEt;
+            mIdBusEt, mTimeIntervalEt, mDistanceMin;
     private ToggleButton mStartBtn;
     private Bus mBus;
     private Route mRoute;
     private ConnectionManager mConnectionManager;
     private Handler mUpdateLogHandler;
-    private TextView mLogTv;
     private FloatingActionButton mSendMessageFab;
     private FloatingActionsMenu mActionFam;
 
@@ -67,6 +66,7 @@ public class ConnectActivity extends AppCompatActivity {
         mDescriptionRouteEt = (EditText) findViewById(R.id.description_route_et);
         mIdBusEt = (EditText) findViewById(R.id.id_bus_et);
         mTimeIntervalEt = (EditText) findViewById(R.id.time_interval_et);
+        mDistanceMin = (EditText) findViewById(R.id.radius_position_et);
 
         mStartBtn = (ToggleButton) findViewById(R.id.start_btn);
 
@@ -74,8 +74,6 @@ public class ConnectActivity extends AppCompatActivity {
         mRoute = new Route();
 
         LogFile.writeln(this, "Sessão iniciada: "+(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())));
-        mLogTv = (TextView) findViewById(R.id.log);
-        mLogTv.setText("");
 
 
         mSendMessageFab = (FloatingActionButton) findViewById(R.id.send_message_fab);
@@ -91,6 +89,7 @@ public class ConnectActivity extends AppCompatActivity {
         editor.putString("ROUTE_NAME", mNameRouteEt.getText().toString());
         editor.putString("ROUTE_DESCRIPTION", mDescriptionRouteEt.getText().toString());
         editor.putString("TIME_INTERVAL", mTimeIntervalEt.getText().toString());
+        editor.putString("DISTANCE_MIN", mDistanceMin.getText().toString());
         editor.commit();
     }
     private void rememberInputs(){
@@ -101,6 +100,7 @@ public class ConnectActivity extends AppCompatActivity {
         mNameRouteEt.setText(sharedPref.getString("ROUTE_NAME", ""));
         mDescriptionRouteEt.setText(sharedPref.getString("ROUTE_DESCRIPTION", ""));
         mTimeIntervalEt.setText(sharedPref.getString("TIME_INTERVAL", "1000"));
+        mDistanceMin.setText(sharedPref.getString("DISTANCE_MIN", "10"));
     }
     private void setEvents(){
         mStartBtn.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +118,7 @@ public class ConnectActivity extends AppCompatActivity {
                     intent.putExtra("HOST", getHost());
                     intent.putExtra("TIME_INTERVAL", getTimeInterval());
                     intent.putExtra("TOKEN", mConnectionManager.getToken());
+                    intent.putExtra("DISTANCE_MIN", getDistanceMin());
                     startService(intent);
                     mActionFam.setVisibility(View.VISIBLE);
                 }
@@ -208,6 +209,9 @@ public class ConnectActivity extends AppCompatActivity {
     }
     private long getTimeInterval(){
         return Long.parseLong(mTimeIntervalEt.getText().toString());
+    }
+    private float getDistanceMin(){
+        return Float.parseFloat(mDistanceMin.getText().toString());
     }
     @Override
     protected void onDestroy() {

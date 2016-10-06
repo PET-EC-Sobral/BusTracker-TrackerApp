@@ -87,6 +87,14 @@
                 android:layout_gravity="center_horizontal"
                 android:hint="Intervalo de envio" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/radius_position_et"
+                android:hint="Distancia minima para gatilho" />
+
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,12 +107,6 @@
                 android:id="@+id/ScrollView01"
                 android:layout_width="wrap_content"
                 android:layout_height="150dip">-->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/log"
-                    android:text="Log"/>
 
             <!--</ScrollView>-->
 
