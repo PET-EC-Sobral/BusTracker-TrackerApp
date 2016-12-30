@@ -2,12 +2,15 @@ package br.ufc.ec.pet.bustracker.trackerapp;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 import br.ufc.ec.pet.bustracker.trackerapp.types.Bus;
 import br.ufc.ec.pet.bustracker.trackerapp.types.Message;
@@ -24,6 +27,8 @@ public class TrackerService extends Service {
     LocationManager mLocationManager;
     LocationListenerTracker mLocationListener;
     ConnectionManager mConnectionManager;
+    public static final String PREFS_SERVICE = "service_prefs";
+    private SharedPreferences pref;
 
     /*public TrackerService(Route route, Bus bus) {
         mRoute = route;
@@ -36,6 +41,7 @@ public class TrackerService extends Service {
         mConnectionManager = new ConnectionManager(getBaseContext(), "");
         Log.d("Bus", "create service");
 
+        pref = getSharedPreferences(PREFS_SERVICE, 0);
 
         mLocationListener = new LocationListenerTracker();
         mLocationManager = (LocationManager) getSystemService(this.getApplicationContext().LOCATION_SERVICE);
@@ -56,32 +62,51 @@ public class TrackerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null){
-            setSendLocation(!intent.getBooleanExtra("STOP_SEND", false));
+            boolean stopSend = intent.getBooleanExtra("STOP_SEND", false);
+            setSendLocation(!stopSend);
 
-            if(intent.hasExtra("BUS"))
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean(SharedPreferencesAttributes.STARTUP, !stopSend);
+
+            if(intent.hasExtra("BUS")) {
                 mBus = intent.getParcelableExtra("BUS");
+                editor.putString(SharedPreferencesAttributes.BUS, new Gson().toJson(mBus));
+            }
 
-            if(intent.hasExtra("ROUTE"))
+            if(intent.hasExtra("ROUTE")) {
                 mRoute = intent.getParcelableExtra("ROUTE");
+                editor.putString(SharedPreferencesAttributes.ROUTE, new Gson().toJson(mRoute));
+            }
 
-            if(intent.hasExtra("HOST"))
-                mConnectionManager.setServerPrefix(intent.getStringExtra("HOST"));
+            if(intent.hasExtra("HOST")) {
+                String host = intent.getStringExtra("HOST");
+                mConnectionManager.setServerPrefix(host);
+                editor.putString(SharedPreferencesAttributes.HOST, host);
+            }
 
             mTimeInterval = intent.getLongExtra("TIME_INTERVAL", mTimeInterval);
+            editor.putLong(SharedPreferencesAttributes.TIME_INTERVAL, mTimeInterval);
 
             mDistanceMin = intent.getFloatExtra("DISTANCE_MIN", mDistanceMin);
+            editor.putFloat(SharedPreferencesAttributes.DISTANCE_MIN, mDistanceMin);
 
             if(intent.hasExtra("TOKEN")) {
-                mConnectionManager.setToken(intent.getStringExtra("TOKEN"));
+                String token = intent.getStringExtra("TOKEN");
+                mConnectionManager.setToken(token);
                 Log.d("Bus", intent.getStringExtra("TOKEN"));
                 Log.d("Bus", mConnectionManager.getToken());
+
+                editor.putString(SharedPreferencesAttributes.TOKEN, token);
             }
             if(intent.hasExtra("MESSAGE")){
                 Message message = intent.getParcelableExtra("MESSAGE");
                 sendMessage(message);
             }
+            editor.commit();
         }
         LogFile.writeln(getApplicationContext(), "Serviço iniciado...");
+
+
         return super.onStartCommand(intent, flags, startId);
     }
     private void sendMessage(Message message){
@@ -145,6 +170,22 @@ public class TrackerService extends Service {
         public void onProviderDisabled(String provider) {
 
         }
+    }
+    class Extra{
+        private Extra(){}
+        public static final String TOKEN = "TrackerService.Extra.TOKEN";//string value
+        public static final String BUS = "TrackerService.Extra.BUS";//json from Bus object
+        public static final String ROUTE = "TrackerService.Extra.ROUTE";
+        public static final String HOST = "TrackerService.Extra.HOST";
+        public static final String TIME_INTERVAL = "TrackerService.Extra.TIME_INTERVAL";
+        public static final String DISTANCE_MIN = "TrackerService.Extra.DISTANCE_MIN";
+        public static final String MESSAGE = "TrackerService.Extra.MESSAGE";
+
+    }
+    class SharedPreferencesAttributes extends TrackerService.Extra{
+        private SharedPreferencesAttributes(){}
+        public static final String STARTUP = "TrackerService.SharedPreferencesAttributes.STARTUP";//boolean value
+        public static final String MESSAGE = "";
     }
 }
 
