@@ -59,6 +59,17 @@ public class TrackerService extends Service {
         LogFile.writeln(getApplicationContext(), "Serviço finalizado...");
     }
 
+    private void loadFromSharedPreferences(){
+        String busJson = pref.getString(SharedPreferencesAttributes.BUS, "");
+        mBus = new Gson().fromJson(busJson, Bus.class);
+        String routeJson = pref.getString(SharedPreferencesAttributes.ROUTE, "");
+        mRoute = new Gson().fromJson(routeJson, Route.class);
+        mConnectionManager.setServerPrefix(pref.getString(SharedPreferencesAttributes.HOST, ""));
+        mTimeInterval = pref.getLong(SharedPreferencesAttributes.TIME_INTERVAL, mTimeInterval);
+        mDistanceMin = pref.getFloat(SharedPreferencesAttributes.DISTANCE_MIN, mDistanceMin);
+        mConnectionManager.setToken(pref.getString(SharedPreferencesAttributes.TOKEN, ""));
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null){
