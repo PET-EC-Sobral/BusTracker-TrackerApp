@@ -2,6 +2,7 @@ package br.ufc.ec.pet.bustracker.trackerapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -16,14 +17,21 @@ import java.io.OutputStreamWriter;
  * Created by santana on 24/07/16.
  */
 public class LogFile {
-    private static String file = "log";
-    public static String TAG = "Bus";
+    public static final String TAG = "Bus";
+    private static final String file = "log";
+    private static final String SHARED_PREFS = "log_infos";
+    private static final String NUMBER_LINES = "LogFile.NUMBER_LINES";
 
     public static void writeln(Context context, String log, boolean defaultLog){
         OutputStreamWriter outputStreamWriter = null;
         try {
             outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_APPEND));
             outputStreamWriter.write(log+System.getProperty("line.separator"));
+            SharedPreferences shared = context.getSharedPreferences(SHARED_PREFS, 0);
+            int numberLines = shared.getInt(NUMBER_LINES, 0);
+            shared.edit().putInt(NUMBER_LINES, ++numberLines).commit();
+
+
             if(defaultLog)
                 Log.d(TAG, log);
         }catch (IOException e){Log.d("LogFile Error: ", e.toString());}
@@ -37,7 +45,15 @@ public class LogFile {
         writeln(context, log, false);
     }
     public static String read(Context context){
+        return read(context, -1, -1);
+    }
+    public static int getSize(Context context){
+        SharedPreferences shared = context.getSharedPreferences(SHARED_PREFS, 0);
+        return shared.getInt(NUMBER_LINES, 0);
+    }
+    public static String read(Context context, int startLine, int endLine){
         String ret = "";
+        int readLines = 0;
         try {
 
             InputStream inputStream = context.openFileInput(file);
@@ -48,9 +64,15 @@ public class LogFile {
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.insert(0, receiveString);
-                    stringBuilder.insert(receiveString.length(),  "\n");
+                while ( (receiveString = bufferedReader.readLine()) != null &&
+                        (endLine == -1 || readLines <= endLine)) {
+
+                    if(startLine == -1 || readLines >= startLine) {
+                        stringBuilder.insert(0, receiveString);
+                        stringBuilder.insert(receiveString.length(), "\n");
+                    }
+
+                    readLines++;
                 }
 
                 inputStream.close();
@@ -71,6 +93,8 @@ public class LogFile {
         try {
             outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
             outputStreamWriter.write("");
+            SharedPreferences shared = context.getSharedPreferences(SHARED_PREFS, 0);
+            shared.edit().putInt(NUMBER_LINES, 0).commit();
         }catch (IOException e){Log.d("LogFile Error: ", e.toString());}
         finally{
             try {

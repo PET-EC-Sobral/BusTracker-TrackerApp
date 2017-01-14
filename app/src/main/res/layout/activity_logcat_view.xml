@@ -10,10 +10,10 @@
     tools:context="br.ufc.ec.pet.bustracker.trackerapp.LogcatView">
 
 
-    <ScrollView
+    <br.ufc.ec.pet.bustracker.trackerapp.ScrollViewExt
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2" >
+        android:id="@+id/log_scroll_sv" >
 
         <TextView
             android:layout_width="fill_parent"
@@ -22,6 +22,6 @@
             android:text="Log"
             android:id="@+id/log_et"
             android:layout_centerHorizontal="true" />
-    </ScrollView>
+    </br.ufc.ec.pet.bustracker.trackerapp.ScrollViewExt>
 
 </RelativeLayout>
