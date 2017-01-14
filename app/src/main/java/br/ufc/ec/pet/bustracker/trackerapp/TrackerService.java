@@ -1,6 +1,7 @@
 package br.ufc.ec.pet.bustracker.trackerapp;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -76,8 +77,12 @@ public class TrackerService extends Service {
             boolean stopSend = intent.getBooleanExtra("STOP_SEND", false);
             setSendLocation(!stopSend);
 
+            if(intent.getBooleanExtra(SharedPreferencesAttributes.LOAD_PREFS, false)){
+                loadFromSharedPreferences();
+            }
+
             SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean(SharedPreferencesAttributes.STARTUP, !stopSend);
+            editor.putBoolean(SharedPreferencesAttributes.SAFE_CLOSED, stopSend);
 
             if(intent.hasExtra("BUS")) {
                 mBus = intent.getParcelableExtra("BUS");
@@ -143,6 +148,11 @@ public class TrackerService extends Service {
     private void creatBus(){
 
     }
+    public static boolean safeClosed(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_SERVICE, 0);
+        return preferences.getBoolean(SharedPreferencesAttributes.SAFE_CLOSED, true);
+
+    }
     public static TrackerService getInstance(){
         return mInstance;
     }
@@ -191,11 +201,12 @@ public class TrackerService extends Service {
         public static final String TIME_INTERVAL = "TrackerService.Extra.TIME_INTERVAL";
         public static final String DISTANCE_MIN = "TrackerService.Extra.DISTANCE_MIN";
         public static final String MESSAGE = "TrackerService.Extra.MESSAGE";
+        public static final String LOAD_PREFS = "TrackerService.Extra.LOAD_PREFS";
 
     }
     class SharedPreferencesAttributes extends TrackerService.Extra{
         private SharedPreferencesAttributes(){}
-        public static final String STARTUP = "TrackerService.SharedPreferencesAttributes.STARTUP";//boolean value
+        public static final String SAFE_CLOSED = "TrackerService.SharedPreferencesAttributes.SAFE_CLOSED";//boolean value
         public static final String MESSAGE = "";
     }
 }
